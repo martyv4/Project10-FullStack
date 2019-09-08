@@ -2,6 +2,10 @@
 const express = require('express');
 const app = express();
 
+//import the cors module
+const cors = require('cors');
+app.use(cors());
+
 const Sequelize = require('sequelize');
 
 //controls whether it writes any error message to the console

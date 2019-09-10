@@ -16,7 +16,7 @@ class CourseDetail extends Component {
   fetchCourseById = (courseId) => {
     //when loading the page, empty the state variables
     //so the render will show default state while the images load
-    this.setState({ courses: [], isLoading: true });
+    this.setState({ courses: [], isLoading: true, courseWasFound: false });
     
     //construct uri for REST API from Project 9
     const uri = "http://localhost:5000/api/courses/" + courseId;
@@ -42,26 +42,26 @@ class CourseDetail extends Component {
   mapJsonToCourseContent = (course, courseWasFound) => {
     if (courseWasFound)
     {
-    return <div class="bounds course--detail">
-    <div class="grid-66">
-    <div class="course--header">
-      <h4 class="course--label">Course</h4>
-      <h3 class="course--title">{course.title}</h3>
-      <p>By Joe Smith</p>
+    return <div className="bounds course--detail">
+    <div className="grid-66">
+    <div className="course--header">
+      <h4 className="course--label">Course</h4>
+      <h3 className="course--title">{course.title}</h3>
+      <p>By {course.user.firstName} {course.user.lastName}</p>
     </div>
-    <div class="course--description">
+    <div className="course--description">
         {/*todo: split description on line breaks to <p> tags */}
       <p>{course.description}</p>
     </div>
   </div>
-  <div class="grid-25 grid-right">
-    <div class="course--stats">
-      <ul class="course--stats--list">
-        <li class="course--stats--list--item">
+  <div className="grid-25 grid-right">
+    <div className="course--stats">
+      <ul className="course--stats--list">
+        <li className="course--stats--list--item">
           <h4>Estimated Time</h4>
           <h3>{course.estimatedTime}</h3>
         </li>
-        <li class="course--stats--list--item">
+        <li className="course--stats--list--item">
           <h4>Materials Needed</h4>
           <ul> {/*todo: split description on line breaks to <li> tags */}
             <li>{course.materialsNeeded}</li>
@@ -74,9 +74,9 @@ class CourseDetail extends Component {
     }
     else
     {
-        return <div class="bounds course--detail">
-        <div class="grid-66">
-        <div class="course--header">
+        return <div className="bounds course--detail">
+        <div className="grid-66">
+        <div className="course--header">
             Course Not Found!
             </div>
             </div>
@@ -111,15 +111,15 @@ class CourseDetail extends Component {
        
        if (this.state.courseWasFound)
        {
-            opsButtons = <span><a class="button" href={"/courses/edit/" + this.props.match.params.id}>Update Course</a><a class="button" href={"/courses/delete/" + this.props.match.params.id}>Delete Course</a></span>
+            opsButtons = <span><a className="button" href={"/courses/edit/" + this.props.match.params.id}>Update Course</a><a className="button" href={"/courses/delete/" + this.props.match.params.id}>Delete Course</a></span>
        }
 
        //render the course-container with the content and courseList variables within
      return <div>
-     <div class="actions--bar">
-       <div class="bounds">
-       <div class="grid-100">{opsButtons}
-            <a class="button button-secondary" href="/courses/">Return to List</a></div>
+     <div className="actions--bar">
+       <div className="bounds">
+       <div className="grid-100">{opsButtons}
+            <a className="button button-secondary" href="/courses/">Return to List</a></div>
        </div>
      </div>
        {courseFound}

@@ -20,7 +20,10 @@ class Courses extends Component {
     //construct uri for REST API from Project 9
     const uri = "http://localhost:5000/api/courses";
     
-    //HTTP GET the URI, convert the response data to JSON, assign the courses state variable and set state isLoading to false, signifying the courses are loaded
+    //HTTP GET the URI, 
+    //convert the response data to JSON, 
+    //assign the courses state variable and set state isLoading to false, 
+    //signifying the courses are loaded
     fetch(uri)
     .then(response => response.json())
     .then(responseData => {
@@ -54,7 +57,7 @@ class Courses extends Component {
      //if there are no courseList in the array, and the isLoading is false, then this must be an empty search: load NotFound component
        else if (!this.state.isLoading)
        {
-        courseList = <li>Loading...</li>;
+        courseList = <li>No results found...</li>;
        }
        //otherwise, display the generic Loading panel
        else

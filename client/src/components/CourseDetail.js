@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import config from '../config';
 
 class CourseDetail extends Component {
   constructor () {
@@ -15,13 +16,16 @@ class CourseDetail extends Component {
 
   fetchCourseById = (courseId) => {
     //when loading the page, empty the state variables
-    //so the render will show default state while the images load
-    this.setState({ courses: [], isLoading: true, courseWasFound: false });
+    //so the render will show default state while the courses load
+    this.setState({ course: null, isLoading: true, courseWasFound: false });
     
     //construct uri for REST API from Project 9
-    const uri = "http://localhost:5000/api/courses/" + courseId;
+    const uri = config.apiBaseUrl  + "/courses/" + courseId;
     
-    //HTTP GET the URI, convert the response data to JSON, assign the courses state variable and set state isLoading to false, signifying the courses are loaded
+    //HTTP GET the URI, 
+    //convert the response data to JSON, 
+    //assign the courses state variable and set state isLoading to false, 
+    //signifying the courses are loaded
     fetch(uri)
     .then(response => response.json())
     .then(responseData => {
@@ -39,7 +43,7 @@ class CourseDetail extends Component {
     });
   }
 
-  mapJsonToCourseContent = (course, courseWasFound) => {
+  convertJsonToCourseContent = (course, courseWasFound) => {
     if (courseWasFound)
     {
     return <div className="bounds course--detail">
@@ -95,13 +99,15 @@ class CourseDetail extends Component {
     //if the courses array has content display them
      if (this.state.course)
      {
-        courseFound = this.mapJsonToCourseContent(this.state.course, this.state.courseWasFound);
+        courseFound = this.convertJsonToCourseContent(this.state.course, this.state.courseWasFound);
      }
      
-     //if there are no courseList in the array, and the isLoading is false, then this must be an empty search: load NotFound component
+     //if this.state.course remains null, 
+     //and the this.state.isLoading is false, 
+     //then this must be an empty search: load NotFound component
        else if (!this.state.isLoading)
        {
-        courseFound = <li>Loading...</li>;
+        courseFound = <li>Course not found...</li>;
        }
        //otherwise, display the generic Loading panel
        else

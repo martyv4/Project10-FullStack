@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './global.css';
-import Router from './components/AppRouter.js';
+import Router from './AppRouter';
 
 
 class App extends Component {

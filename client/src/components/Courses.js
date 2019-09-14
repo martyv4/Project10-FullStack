@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import config from '../config';
 
 class Courses extends Component {
   constructor () {
@@ -18,7 +19,7 @@ class Courses extends Component {
     this.setState({ courses: [], isLoading: true });
     
     //construct uri for REST API from Project 9
-    const uri = "http://localhost:5000/api/courses";
+    const uri = config.apiBaseUrl + "/courses";
     
     //HTTP GET the URI, 
     //convert the response data to JSON, 
@@ -67,13 +68,6 @@ class Courses extends Component {
        
        //render the course-container with the content and courseList variables within
      return <div>
-     <div className="header">
-       <div className="bounds">
-         <h1 className="header--logo">Courses</h1>
-         <nav><a className="signup" href="/users/create">Sign Up</a><a className="signin" href="/users/login">Sign In</a></nav>
-       </div>
-     </div>
-     <hr />
      <div className="bounds">
        {courseList}
        <div className="grid-33"><a className="course--module course--add--module" href="/courses/create">

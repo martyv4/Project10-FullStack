@@ -10,8 +10,11 @@ class CourseDetail extends Component {
     this.state = {
       course: null,
       isLoading: true,
-      courseWasFound: false
+      courseWasFound: false,
+      id: null
     };
+
+    this.deleteCourse = this.deleteCourse.bind(this);
   }
 
   fetchCourseById = (courseId) => {
@@ -31,11 +34,11 @@ class CourseDetail extends Component {
     .then(responseData => {
       if (responseData.id)
       {
-        this.setState({ course: responseData, isLoading: false, courseWasFound: true });
+        this.setState({ course: responseData, isLoading: false, courseWasFound: true, id: responseData.id });
       }
       else
       {
-        this.setState({ course: responseData, isLoading: false, courseWasFound: false });
+        this.setState({ course: responseData, isLoading: false, courseWasFound: false, id: -1 });
       }
     })
     .catch(error => {
@@ -94,8 +97,10 @@ class CourseDetail extends Component {
 
   render() {
     let courseFound = null;
-    let opsButtons = '';
- 
+    
+    const { context } = this.props;
+    const authUser = context.authenticatedUser;
+
     //if the courses array has content display them
      if (this.state.course)
      {
@@ -114,17 +119,21 @@ class CourseDetail extends Component {
        {
         courseFound = <li>Loading...</li>;
        }
-       
-       if (this.state.courseWasFound)
-       {
-            opsButtons = <span><a className="button" href={"/courses/edit/" + this.props.match.params.id}>Update Course</a><a className="button" href={"/courses/delete/" + this.props.match.params.id}>Delete Course</a></span>
-       }
-
+ 
        //render the course-container with the content and courseList variables within
      return <div>
      <div className="actions--bar">
        <div className="bounds">
-       <div className="grid-100">{opsButtons}
+       <div className="grid-100">
+         {/* inline conditional: if a course was found, and a user is logged in and that user's id matches the courses's user's id, show the update and delete buttons. If not, show nothing */}
+         {this.state.courseWasFound && authUser && authUser.id === this.state.course.user.id ? (
+              <React.Fragment>
+                <span><a className="button" href={"/courses/" + this.props.match.params.id + "/update"}>Update Course</a><button className="button" onClick={this.deleteCourse}>Delete Course</button></span>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+              </React.Fragment>
+            )}
             <a className="button button-secondary" href="/courses/">Return to List</a></div>
        </div>
      </div>
@@ -133,6 +142,35 @@ class CourseDetail extends Component {
 
   }
 
+  deleteCourse = () => {
+    const { context } = this.props;
+
+    const id = this.state.id;
+
+    context.data.deleteCourse(id, context.authenticatedUser, context.authenticatedUserPwd)
+      .then( courseCreateResult => {
+        if (!courseCreateResult.length) {
+          //would be great to redirect user to the Location value in the HTTP header of the response, but:
+          //https://stackoverflow.com/questions/43344819/reading-response-headers-with-fetch-api
+          //Can't access Location header in CORS
+          //go back to course list instead...
+          this.props.history.push('/');
+
+        } else {
+          //THIS SHOULD NEVER BE REACHED - createCourse should always return something
+          //if no response from POST /courses go to the general error page
+          this.props.history.push('/error');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.props.history.push('/error');
+      });
+  
+  }
+
 }
+
+
 
 export default CourseDetail;

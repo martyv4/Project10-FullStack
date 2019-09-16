@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 
+import './global.css';
+
+import { Provider } from './components/Context';
 import App from './App';
-import { Provider } from './Context';
 
 ReactDOM.render(
-<Provider>
-<App />
-</Provider>
-, document.getElementById('root'));
-
+  <Provider>
+    <App />
+  </Provider>,
+  document.getElementById('root'));

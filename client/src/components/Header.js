@@ -14,7 +14,7 @@ export default class Header extends React.PureComponent {
               {/* inline conditional: if authUser is not null, user is logged in. If not, offer sign up and sign in links */}
             {authUser ? (
               <React.Fragment>
-                <span>Welcome, {authUser.name}!</span>
+                <span>Welcome, {authUser.firstName + " " + authUser.lastName}!</span>
                 <Link to="/signout">Sign Out</Link>
               </React.Fragment>
             ) : (

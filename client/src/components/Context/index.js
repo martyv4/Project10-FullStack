@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import Cookies from 'js-cookie';
-import UserData from './UserData';
+import Data from '../../Data';
 
 const Context = React.createContext(); 
 
 export class Provider extends Component {
 
   state = {
-    authenticatedUser: Cookies.getJSON('authenticatedUser') || null
+    authenticatedUser: Cookies.getJSON('authenticatedUser') || null,
+    authenticatedUserPwd: Cookies.getJSON('authenticatedUserPwd') || null
   };
 
   constructor() {
     super();
-    this.data = new UserData();
+    this.data = new Data();
   }
 
   render() {
-    const { authenticatedUser } = this.state;
+    const { authenticatedUser, authenticatedUserPwd } = this.state;
     const value = {
       authenticatedUser,
+      authenticatedUserPwd,
       data: this.data,
       actions: {
         signIn: this.signIn,
@@ -33,25 +35,34 @@ export class Provider extends Component {
   }
 
   
-  signIn = async (emailAddress, password) => {
-    const user = await this.data.getUser(emailAddress, password);
+  signIn = async (username, password) => {
+    const user = await this.data.getUser(username, password);
     if (user !== null) {
       this.setState(() => {
         return {
           authenticatedUser: user,
+          authenticatedUserPwd: password,
         };
       });
+      
       const cookieOptions = {
         expires: 1 // 1 day
       };
-      //Cookies.set('authenticatedUser', "what", {cookieOptions});
+      
+      Cookies.set('authenticatedUser', JSON.stringify(user), cookieOptions);
+      Cookies.set('authenticatedUserPwd', password, cookieOptions);
+      //same as
+      //Cookies.set('authenticatedUser', JSON.stringify(user), {expires: 1});
+      //this doesn't work
+      //Cookies.set('authenticatedUser', JSON.stringify(user), {{expires: 1}});
     }
     return user;
   }
 
   signOut = () => {
-    this.setState({ authenticatedUser: null });
+    this.setState({ authenticatedUser: null, authenticatedUserPwd: null });
     Cookies.remove('authenticatedUser');
+    Cookies.remove('authenticatedUserPwd');
   }
 }
 

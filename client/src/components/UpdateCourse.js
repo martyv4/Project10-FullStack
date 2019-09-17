@@ -23,15 +23,18 @@ export default class UpdateCourse extends Component {
     //so the render will show default state while the courses load
     this.setState({ title: '', description: '', materialsNeeded: '', estimatedTime: '', isLoading: true, id: null, courseUserId: null, courseWasFound: false });
     
+    const { context } = this.props;
+
     //construct uri for REST API from Project 9
-    const uri = config.apiBaseUrl  + "/courses/" + courseId;
+    //const uri = config.apiBaseUrl  + "/courses/" + courseId;
     
     //HTTP GET the URI, 
     //convert the response data to JSON, 
     //assign the courses state variable and set state isLoading to false, 
     //signifying the courses are loaded
-    fetch(uri)
-    .then(response => response.json())
+    //fetch(uri)
+    //.then(response => response.json())
+    context.data.getCourseById(courseId)
     .then(responseData => {
       if (responseData.id)
       {

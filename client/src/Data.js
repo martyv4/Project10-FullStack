@@ -1,5 +1,9 @@
 import config from './config';
 
+//Contains methods for interacting with the api application
+//all methods are designated async since the React components using these are themselves asynch
+//each uses method api and awaits its return results before proceeding (fetch is async)
+
 export default class Data {
   api(path, method = 'GET', body = null, requiresAuth = false, credentials = null) {
     const url = config.apiBaseUrl + path;
@@ -30,6 +34,7 @@ export default class Data {
     else if (response.status === 401) {
       return null;
     }
+    //reached if 500 or any other status code
     else {
       throw new Error();
     }
@@ -45,6 +50,35 @@ export default class Data {
         return data.errors;
       });
     }
+    //reached if 500 or any other status code
+    else {
+      throw new Error();
+    }
+  }
+
+  async getCourses() {
+    const response = await this.api('/courses/', 'GET');
+    if (response.status === 200) {
+      return response.json().then(data => data);
+    }
+    else if (response.status === 404) {
+      return null;
+    }
+    //reached if 500 or any other status code
+    else {
+      throw new Error();
+    }
+  }
+
+  async getCourseById(id) {
+    const response = await this.api('/courses/' + id, 'GET');
+    if (response.status === 200) {
+      return response.json().then(data => data);
+    }
+    else if (response.status === 404) {
+      return null;
+    }
+    //reached if 500 or any other status code
     else {
       throw new Error();
     }
@@ -61,6 +95,7 @@ export default class Data {
         return data.errors;
       });
     }
+    //reached if 500 or any other status code
     else {
       throw new Error();
     }
@@ -77,6 +112,7 @@ export default class Data {
         return data.errors;
       });
     }
+    //reached if 500 or any other status code
     else {
       throw new Error();
     }
@@ -93,6 +129,7 @@ export default class Data {
         return data.errors;
       });
     }
+    //reached if 500 or any other status code
     else {
       throw new Error();
     }

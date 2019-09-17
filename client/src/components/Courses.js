@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import config from '../config';
+import Data from '../Data';
 
 class Courses extends Component {
   constructor () {
@@ -17,16 +17,22 @@ class Courses extends Component {
     //when loading the page, empty the state variables
     //so the render will show default state while the images load
     this.setState({ courses: [], isLoading: true });
+
+    const data = new Data();
     
     //construct uri for REST API from Project 9
-    const uri = config.apiBaseUrl + "/courses";
+    //const uri = config.apiBaseUrl + "/courses";
     
     //HTTP GET the URI, 
     //convert the response data to JSON, 
     //assign the courses state variable and set state isLoading to false, 
     //signifying the courses are loaded
+    
+    /*
     fetch(uri)
     .then(response => response.json())
+    */
+    data.getCourses()
     .then(responseData => {
       this.setState({ courses: responseData, isLoading: false });
     })

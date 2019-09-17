@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import config from '../config';
+import Data from '../Data';
+
+//Markdown Support for Course Detail - description and materialsNeeded
+import ReactMarkdown from 'react-markdown';
 
 class CourseDetail extends Component {
   constructor () {
@@ -23,15 +26,21 @@ class CourseDetail extends Component {
     //so the render will show default state while the courses load
     this.setState({ course: null, isLoading: true, courseWasFound: false });
     
+    const data = new Data();
+
     //construct uri for REST API from Project 9
-    const uri = config.apiBaseUrl  + "/courses/" + courseId;
+    //const uri = config.apiBaseUrl  + "/courses/" + courseId;
     
     //HTTP GET the URI, 
     //convert the response data to JSON, 
     //assign the courses state variable and set state isLoading to false, 
     //signifying the courses are loaded
+
+    /*
     fetch(uri)
     .then(response => response.json())
+    */
+    data.getCourseById(courseId)
     .then(responseData => {
       if (responseData.id)
       {
@@ -56,8 +65,9 @@ class CourseDetail extends Component {
       <p>By {course.user.firstName} {course.user.lastName}</p>
     </div>
     <div className="course--description">
-        {/*todo: split description on line breaks to <p> tags */}
-      <p>{course.description}</p>
+        
+      <p><ReactMarkdown>{course.description}</ReactMarkdown></p>
+      
     </div>
   </div>
   <div className="grid-25 grid-right">
@@ -65,12 +75,13 @@ class CourseDetail extends Component {
       <ul className="course--stats--list">
         <li className="course--stats--list--item">
           <h4>Estimated Time</h4>
+          
           <h3>{course.estimatedTime}</h3>
         </li>
         <li className="course--stats--list--item">
           <h4>Materials Needed</h4>
-          <ul> {/*todo: split description on line breaks to <li> tags */}
-            <li>{course.materialsNeeded}</li>
+          <ul> 
+            <ReactMarkdown>{course.materialsNeeded}</ReactMarkdown>
           </ul>
         </li>
       </ul>

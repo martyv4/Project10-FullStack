@@ -23,7 +23,7 @@ export default class CreateCourse extends Component {
             cancel={this.cancel}
             errors={this.state.errors}
             submit={this.submit}
-            submitButtonText="Create"
+            submitButtonText="Create Course"
             elements={() => (
               <React.Fragment>
                 <input 

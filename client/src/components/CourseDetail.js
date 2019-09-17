@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import config from '../config';
 
 class CourseDetail extends Component {
@@ -46,9 +47,7 @@ class CourseDetail extends Component {
     });
   }
 
-  convertJsonToCourseContent = (course, courseWasFound) => {
-    if (courseWasFound)
-    {
+  convertJsonToCourseContent = (course) => {
     return <div className="bounds course--detail">
     <div className="grid-66">
     <div className="course--header">
@@ -78,17 +77,6 @@ class CourseDetail extends Component {
     </div>
   </div>
   </div>
-    }
-    else
-    {
-        return <div className="bounds course--detail">
-        <div className="grid-66">
-        <div className="course--header">
-            Course Not Found!
-            </div>
-            </div>
-            </div>
-    }
   }
 
   componentDidMount() {
@@ -104,16 +92,17 @@ class CourseDetail extends Component {
     //if the courses array has content display them
      if (this.state.course)
      {
-        courseFound = this.convertJsonToCourseContent(this.state.course, this.state.courseWasFound);
+       if (this.state.courseWasFound) {
+        courseFound = this.convertJsonToCourseContent(this.state.course);
+      }
+      else
+      {
+        return <Redirect to='/notfound' />
+      }
      }
      
-     //if this.state.course remains null, 
-     //and the this.state.isLoading is false, 
-     //then this must be an empty search: load NotFound component
-       else if (!this.state.isLoading)
-       {
-        courseFound = <li>Course not found...</li>;
-       }
+       //don't need to check this.state.isLoading - if we get here
+       //no course has been loaded yet
        //otherwise, display the generic Loading panel
        else
        {

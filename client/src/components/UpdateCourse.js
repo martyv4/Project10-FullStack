@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Form from './Form';
 import config from '../config';
+import { Redirect } from 'react-router-dom';
 
 export default class UpdateCourse extends Component {
   constructor() {
@@ -12,6 +13,7 @@ export default class UpdateCourse extends Component {
       materialsNeeded: '',
       estimatedTime: '',
       id: null,
+      courseUserId: null,
       errors: []
     };
   }
@@ -19,7 +21,7 @@ export default class UpdateCourse extends Component {
   fetchCourseById = (courseId) => {
     //when loading the page, empty the state variables
     //so the render will show default state while the courses load
-    this.setState({ course: null, isLoading: true, courseWasFound: false });
+    this.setState({ title: '', description: '', materialsNeeded: '', estimatedTime: '', isLoading: true, id: null, courseUserId: null, courseWasFound: false });
     
     //construct uri for REST API from Project 9
     const uri = config.apiBaseUrl  + "/courses/" + courseId;
@@ -33,11 +35,11 @@ export default class UpdateCourse extends Component {
     .then(responseData => {
       if (responseData.id)
       {
-        this.setState({ title: responseData.title, description: responseData.description, materialsNeeded: responseData.materialsNeeded, estimatedTime: responseData.estimatedTime, isLoading: false, id: responseData.id, courseWasFound: true });
+        this.setState({ title: responseData.title, description: responseData.description, materialsNeeded: responseData.materialsNeeded, estimatedTime: responseData.estimatedTime, isLoading: false, id: responseData.id, courseUserId: responseData.user.id, courseWasFound: true });
       }
       else
       {
-        this.setState({  title: '', description: '', materialsNeeded: '', estimatedTime: '', isLoading: false, id: -1, courseWasFound: false });
+        this.setState({  title: '', description: '', materialsNeeded: '', estimatedTime: '', isLoading: false, id: -1, courseUserId: -1, courseWasFound: false });
       }
     })
     .catch(error => {
@@ -50,6 +52,16 @@ export default class UpdateCourse extends Component {
   }
 
   render() {
+    const { context } = this.props;
+    if (this.state.id)
+    {
+      if (!this.state.courseWasFound) {
+        return <Redirect to='/notfound' />
+      }
+      if (context.authenticatedUser.id !== this.state.courseUserId) {
+        return <Redirect to='/forbidden' />
+      }
+    }
     return (
       <div className="bounds">
         <div className="grid-33 centered signin">
@@ -58,7 +70,7 @@ export default class UpdateCourse extends Component {
             cancel={this.cancel}
             errors={this.state.errors}
             submit={this.submit}
-            submitButtonText="Update"
+            submitButtonText="Update Course"
             elements={() => (
               <React.Fragment>
                 <input 

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import Data from '../Data';
 
-//Markdown Support for Course Detail - description and materialsNeeded
+//react-Markdown Support for Course Detail - description and materialsNeeded
+
 import ReactMarkdown from 'react-markdown';
 
 class CourseDetail extends Component {

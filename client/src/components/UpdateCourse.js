@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Form from './Form';
-import config from '../config';
+import CourseForm from './CourseForm';
 import { Redirect } from 'react-router-dom';
 
 export default class UpdateCourse extends Component {
@@ -69,7 +68,7 @@ export default class UpdateCourse extends Component {
       <div className="bounds">
         <div className="grid-33 centered signin">
           <h1>Update Course</h1>
-          <Form 
+          <CourseForm 
             cancel={this.cancel}
             errors={this.state.errors}
             submit={this.submit}

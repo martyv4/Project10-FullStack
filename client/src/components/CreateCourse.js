@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Form from './Form';
+import CourseForm from './CourseForm';
 
 export default class CreateCourse extends Component {
   constructor() {
@@ -15,16 +15,18 @@ export default class CreateCourse extends Component {
   }
 
   render() {
+    const { context } = this.props;
+    const authUser = context.authenticatedUser;
     return (
-      <div className="bounds">
-        <div className="grid-33 centered signin">
+      <div className="bounds course--detail">
           <h1>Create Course</h1>
-          <Form 
+          <CourseForm 
             cancel={this.cancel}
             errors={this.state.errors}
             submit={this.submit}
             submitButtonText="Create Course"
-            elements={() => (
+            userName={authUser.firstName + " " + authUser.lastName}
+            titleElement={() => (
               <React.Fragment>
                 <input 
                   id="title" 
@@ -32,31 +34,44 @@ export default class CreateCourse extends Component {
                   type="text"
                   value={this.state.title} 
                   onChange={this.change} 
-                  placeholder="Title" />
-                  <input 
+                  className="input-title course--title--input"
+                  placeholder="Course title..." />
+              </React.Fragment>
+            )}
+            descriptionElement={() => (
+              <React.Fragment>
+                  <textarea 
                   id="description" 
                   name="description" 
                   type="description"
                   value={this.state.description} 
                   onChange={this.change} 
-                  placeholder="Description" />
+                  placeholder="Course description..." />
+                  </React.Fragment>
+            )}
+            estimatedTimeElement={() => (
+              <React.Fragment>
                 <input 
                   id="estimatedTime" 
                   name="estimatedTime" 
                   type="text"
                   value={this.state.estimatedTime} 
                   onChange={this.change} 
-                  placeholder="Estimated Time" />
-                <input 
+                  className="course--time--input"
+                  placeholder="Hours" />
+                  </React.Fragment>
+            )}
+            materialsNeededElement={() => (
+              <React.Fragment>
+                <textarea 
                   id="materialsNeeded" 
                   name="materialsNeeded"
                   type="materialsNeeded"
                   value={this.state.materialsNeeded} 
                   onChange={this.change} 
-                  placeholder="Materials Needed" />
+                  placeholder="List materials..." />
               </React.Fragment>
             )} />
-        </div>
       </div>
     );
   }

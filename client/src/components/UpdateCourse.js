@@ -55,6 +55,7 @@ export default class UpdateCourse extends Component {
 
   render() {
     const { context } = this.props;
+    const authUser = context.authenticatedUser;
     if (this.state.id)
     {
       if (!this.state.courseWasFound) {
@@ -65,15 +66,16 @@ export default class UpdateCourse extends Component {
       }
     }
     return (
+      
       <div className="bounds">
-        <div className="grid-33 centered signin">
           <h1>Update Course</h1>
           <CourseForm 
             cancel={this.cancel}
             errors={this.state.errors}
             submit={this.submit}
             submitButtonText="Update Course"
-            elements={() => (
+            userName={authUser.firstName + " " + authUser.lastName}
+            titleElement={() => (
               <React.Fragment>
                 <input 
                   id="title" 
@@ -81,32 +83,45 @@ export default class UpdateCourse extends Component {
                   type="text"
                   value={this.state.title} 
                   onChange={this.change} 
-                  placeholder="Title" />
-                  <input 
+                  className="input-title course--title--input"
+                  placeholder="Course title..." />
+              </React.Fragment>
+            )}
+            descriptionElement={() => (
+              <React.Fragment>
+                  <textarea 
                   id="description" 
                   name="description" 
                   type="description"
                   value={this.state.description} 
                   onChange={this.change} 
-                  placeholder="Description" />
+                  placeholder="Course description..." />
+                  </React.Fragment>
+            )}
+            estimatedTimeElement={() => (
+              <React.Fragment>
                 <input 
                   id="estimatedTime" 
                   name="estimatedTime" 
                   type="text"
                   value={this.state.estimatedTime} 
                   onChange={this.change} 
-                  placeholder="Estimated Time" />
-                <input 
+                  className="course--time--input"
+                  placeholder="Hours" />
+                  </React.Fragment>
+            )}
+            materialsNeededElement={() => (
+              <React.Fragment>
+                <textarea 
                   id="materialsNeeded" 
                   name="materialsNeeded"
                   type="materialsNeeded"
                   value={this.state.materialsNeeded} 
                   onChange={this.change} 
-                  placeholder="Materials Needed" />
+                  placeholder="List materials..." />
               </React.Fragment>
             )} />
         </div>
-      </div>
     );
   }
 
@@ -144,7 +159,9 @@ export default class UpdateCourse extends Component {
           this.props.history.push('/courses/' + id);
 
         } else {
-          this.props.history.push('/error');
+          this.setState(() => {
+            return { errors: [courseUpdateResult] };
+          });
         }
       })
       .catch((err) => {

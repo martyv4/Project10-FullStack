@@ -113,9 +113,9 @@ export default class CreateCourse extends Component {
           this.props.history.push('/');
 
         } else {
-          //THIS SHOULD NEVER BE REACHED - createCourse should always return something
-          //if no response from POST /courses go to the general error page
-          this.props.history.push('/error');
+          this.setState(() => {
+            return { errors: [courseCreateResult] };
+          });
         }
       })
       .catch((err) => {

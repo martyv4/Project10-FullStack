@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import UserForm from './UserForm';
 
-export default class UserSignIn extends Component {
+class UserSignIn extends Component {
   state = {
     emailAddress: '',
     password: '',
     errors: [],
   }
+
 
   render() {
     const {
@@ -18,7 +19,7 @@ export default class UserSignIn extends Component {
 
     return (
       <div className="bounds">
-        <div className="grid-33 centered signin">
+        <div className="grid-33 centered signin"> 
           <h1>Sign In</h1>
           <UserForm 
             cancel={this.cancel}
@@ -87,3 +88,5 @@ export default class UserSignIn extends Component {
     this.props.history.push('/');
   }
 }
+
+export default UserSignIn;

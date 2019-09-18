@@ -34,10 +34,11 @@ function AppRouter() {
   return (
     <Router>
       <div>
-      <HeaderWithContext />
+      <Route render={({location})=> <HeaderWithContext location={location.pathname} />} />
       <Switch>
         <Route exact path="/" component={Courses} />   
-        <Route exact path="/signin" component={UserSignInWithContext} />
+        {/** <Route exact path="/signin" render={(props) => <UserSignInWithContext {...props} />} /> }**/
+        <Route exact path="/signin" component={UserSignInWithContext} />} />
         <Route exact path="/signup" component={UserSignUpWithContext} />
         <Route exact path="/signout" component={UserSignOutWithContext} />
         <Route exact path="/courses" component={Courses} />

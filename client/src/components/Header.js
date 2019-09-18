@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
-export default class Header extends React.PureComponent {
+class Header extends React.PureComponent {
   render() {
     const { context } = this.props;
     const authUser = context.authenticatedUser;
+
+    const pathway = this.props.location.pathname; 
 
     return (
       <div className="header">
@@ -19,8 +22,16 @@ export default class Header extends React.PureComponent {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <Link className="signup" to="/signup">Sign Up</Link>
-                <Link className="signin" to="/signin">Sign In</Link>
+                <Link className="signup" to={{ 
+                  pathname: '/signup', 
+                  state: { from: pathway } 
+                }} >Sign Up</Link>
+                <Link className="signin" to={{ 
+                  pathname: '/signin', 
+                  state: { from: pathway } 
+                }} >Sign In</Link>
+                
+
               </React.Fragment>
             )}
           </nav>
@@ -29,3 +40,5 @@ export default class Header extends React.PureComponent {
     );
   }
 };
+
+export default withRouter(Header);

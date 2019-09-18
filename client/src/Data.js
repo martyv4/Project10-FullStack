@@ -47,7 +47,7 @@ export default class Data {
     }
     else if (response.status === 400) {
       return response.json().then(data => {
-        return data.errors;
+        return data.message;
       });
     }
     //reached if 500 or any other status code
@@ -92,7 +92,7 @@ export default class Data {
     }
     else if (response.status === 400) {
       return response.json().then(data => {
-        return data.errors;
+        return data.message;
       });
     }
     //reached if 500 or any other status code
@@ -109,7 +109,9 @@ export default class Data {
     }
     else if (response.status === 400) {
       return response.json().then(data => {
-        return data.errors;
+        return data;
+        //in project 9, the error message for PUT /courses/:id didn't have a name value.
+        //pass the whole string out as the error validation message
       });
     }
     //reached if 500 or any other status code
@@ -126,7 +128,7 @@ export default class Data {
     }
     else if (response.status === 400) {
       return response.json().then(data => {
-        return data.errors;
+        return data.message;
       });
     }
     //reached if 500 or any other status code

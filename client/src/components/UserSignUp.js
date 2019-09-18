@@ -11,6 +11,7 @@ export default class UserSignUp extends Component {
       lastName: '',
       emailAddress: '',
       password: '',
+      confirmPassword: '',
       errors: []
     };
   }
@@ -55,6 +56,13 @@ export default class UserSignUp extends Component {
                   value={this.state.password} 
                   onChange={this.change} 
                   placeholder="Password" />
+                <input 
+                  id="confirmPassword" 
+                  name="confirmPassword"
+                  type="password"
+                  value={this.state.confirmPassword} 
+                  onChange={this.change} 
+                  placeholder="Confirm Password" />
               </React.Fragment>
             )} />
           <p>
@@ -79,35 +87,76 @@ export default class UserSignUp extends Component {
   submit = () => {
     const { context } = this.props;
 
+    let errorList = [];
+
     const firstName = this.state.firstName;
     const lastName = this.state.lastName;
     const emailAddress = this.state.emailAddress;
     const password = this.state.password;
+    const confirmPassword = this.state.confirmPassword;
 
-    // Create user
-    const user = {
-      firstName,
-      lastName,
-      emailAddress,
-      password,
-    };
+    //input validators
+    if (firstName === '')
+    {
+      errorList.push('First Name must be provided.');
+    }
+    if (lastName === '')
+    {
+      errorList.push('Last Name must be provided.');
+    }
+    if (emailAddress === '')
+    {
+      errorList.push('Email Address must be provided.');
+    }
+    if (password === '')
+    {
+      errorList.push('Password must be provided.');
+    }
+    else if (confirmPassword === '')
+    {
+      errorList.push('Confirm Password must be provided.');
+    }
+    else if (password !== confirmPassword)
+    {
+      errorList.push('Password and Confirm Password do not match.');
+    }
 
-    context.data.createUser(user)
-      .then( errors => {
-        if (errors.length) {
-          this.setState({ errors });
-        } else {
-          context.actions.signIn(emailAddress, password)
-            .then(() => {
-              this.props.history.push('/');    
-            });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        this.props.history.push('/error');
+    if (errorList.length > 0)
+    {
+      this.setState(() => {
+        return { errors: errorList };
       });
-  
+    }
+
+
+    else
+    {
+      // Create user
+      const user = {
+        firstName,
+        lastName,
+        emailAddress,
+        password,
+      };
+
+      context.data.createUser(user)
+        .then( errors => {
+          if (errors.length) {
+            this.setState(() => {
+              return { errors: [errors] };
+            });
+          } else {
+            context.actions.signIn(emailAddress, password)
+              .then(() => {
+                this.props.history.push('/');    
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.props.history.push('/error');
+        });
+    }
   }
 
   cancel = () => {

@@ -67,7 +67,7 @@ class CourseDetail extends Component {
     </div>
     <div className="course--description">
         
-      <p><ReactMarkdown>{course.description}</ReactMarkdown></p>
+      <ReactMarkdown>{course.description}</ReactMarkdown>
       
     </div>
   </div>

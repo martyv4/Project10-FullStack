@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import UserForm from './UserForm';
 
+//component to display a form to the user, allong sign-in to be accomplished
+
 class UserSignIn extends Component {
   state = {
     emailAddress: '',
@@ -65,6 +67,8 @@ class UserSignIn extends Component {
 
   submit = () => {
     const { context } = this.props;
+    //load this.props.location.state which will contain the page which accessed UserSignIn
+    //(passed in from the Header component). If it is null, from is set to pathname '/' (list route)
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     const { emailAddress, password } = this.state;
 
@@ -75,6 +79,7 @@ class UserSignIn extends Component {
             return { errors: [ 'Sign-in was unsuccessful' ] };
           });
         } else {
+          //take the user back to the page where they came from, or '/' if no from was set
           this.props.history.push(from);
         }
       })

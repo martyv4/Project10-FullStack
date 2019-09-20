@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+
+//CourseDetail is context-free so Data has to be imported itself
 import Data from '../Data';
 
 //react-Markdown Support for Course Detail - description and materialsNeeded
-
+//renders linebreaks as <p>, * as li, and other stylize conversions
 import ReactMarkdown from 'react-markdown';
 
 class CourseDetail extends Component {
@@ -11,7 +13,7 @@ class CourseDetail extends Component {
     //execute default constructor
     super();
 
-    //default state: courses empty array, isLoading boolean true
+    //default state: courses empty array, isLoading boolean true, courseWasFound false, found ID null
     this.state = {
       course: null,
       isLoading: true,
@@ -19,30 +21,22 @@ class CourseDetail extends Component {
       id: null
     };
 
+    //bind the action to current instance this
     this.deleteCourse = this.deleteCourse.bind(this);
   }
 
   fetchCourseById = (courseId) => {
     //when loading the page, empty the state variables
     //so the render will show default state while the courses load
-    this.setState({ course: null, isLoading: true, courseWasFound: false });
+    //courseWasFound - reset all of the state variables
+    this.setState({ course: null, isLoading: true, courseWasFound: false, id: null });
     
     const data = new Data();
 
-    //construct uri for REST API from Project 9
-    //const uri = config.apiBaseUrl  + "/courses/" + courseId;
-    
-    //HTTP GET the URI, 
-    //convert the response data to JSON, 
-    //assign the courses state variable and set state isLoading to false, 
-    //signifying the courses are loaded
-
-    /*
-    fetch(uri)
-    .then(response => response.json())
-    */
     data.getCourseById(courseId)
     .then(responseData => {
+      //if responseData.id is not null, we have a course JSON
+      //if it is null, we've got an error message of some kind
       if (responseData.id)
       {
         this.setState({ course: responseData, isLoading: false, courseWasFound: true, id: responseData.id });
@@ -57,6 +51,7 @@ class CourseDetail extends Component {
     });
   }
 
+  //method to produce JSX for a course JSON
   convertJsonToCourseContent = (course) => {
     return <div className="bounds course--detail">
     <div className="grid-66">
@@ -91,6 +86,7 @@ class CourseDetail extends Component {
   </div>
   }
 
+  //once component is loaded, get the course for the ID that is in the URI (:id)
   componentDidMount() {
     this.fetchCourseById(this.props.match.params.id);
   }
@@ -101,32 +97,37 @@ class CourseDetail extends Component {
     const { context } = this.props;
     const authUser = context.authenticatedUser;
 
-    //if the courses array has content display them
+    //if the course has the JSON then display it - has to be courseWasFound=true
      if (this.state.course)
      {
        if (this.state.courseWasFound) {
         courseFound = this.convertJsonToCourseContent(this.state.course);
       }
+      //if state.course is not null but courseWasFound = false, redirect to the notfound route
       else
       {
         return <Redirect to='/notfound' />
       }
      }
      
-       //don't need to check this.state.isLoading - if we get here
-       //no course has been loaded yet
-       //otherwise, display the generic Loading panel
+       //don't need to directly check on this.state.isLoading - if we get here
+       //no course has been loaded yet = display the generic Loading panel
        else
        {
         courseFound = <li>Loading...</li>;
        }
  
-       //render the course-container with the content and courseList variables within
+       //render the course-container with whatever courseFound is assigned to
      return <div>
      <div className="actions--bar">
        <div className="bounds">
        <div className="grid-100">
-         {/* inline conditional: if a course was found, and a user is logged in and that user's id matches the courses's user's id, show the update and delete buttons. If not, show nothing */}
+         {/* inline conditional: if a course was found,
+             and a user is logged in
+             and that user's id matches the courses's user's id, 
+             THEN show the update and delete buttons.
+             ELSE, show nothing 
+         */}
          {this.state.courseWasFound && authUser && authUser.id === this.state.course.user.id ? (
               <React.Fragment>
                 <span><a className="button" href={"/courses/" + this.props.match.params.id + "/update"}>Update Course</a><button className="button" onClick={this.deleteCourse}>Delete Course</button></span>
@@ -143,23 +144,23 @@ class CourseDetail extends Component {
 
   }
 
+  //execute deletion - no warning
+  //deletion is not tied to a route in this application (e.g. DELETE /courses/:id) so
+  //access to this operation is already protected: no need to check auth or ownership
   deleteCourse = () => {
     const { context } = this.props;
 
     const id = this.state.id;
 
     context.data.deleteCourse(id, context.authenticatedUser, context.authenticatedUserPwd)
-      .then( courseCreateResult => {
-        if (!courseCreateResult.length) {
-          //would be great to redirect user to the Location value in the HTTP header of the response, but:
-          //https://stackoverflow.com/questions/43344819/reading-response-headers-with-fetch-api
-          //Can't access Location header in CORS
-          //go back to course list instead...
+      .then( courseDeleteResult => {
+        if (!courseDeleteResult.length) {
+          //DELETE is complete, return to list
           this.props.history.push('/');
 
         } else {
-          //THIS SHOULD NEVER BE REACHED - createCourse should always return something
-          //if no response from POST /courses go to the general error page
+          //THIS SHOULD NEVER BE REACHED - deleteCourse should always return something
+          //if no response from DELETE operation go to the general error page
           this.props.history.push('/error');
         }
       })

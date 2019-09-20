@@ -20,6 +20,10 @@ export default class CreateCourse extends Component {
     return (
       <div className="bounds course--detail">
           <h1>Create Course</h1>
+          {/** use CourseForm component, adding in the elements linked to the state variables
+                react to changes in the input elements calling this.change to update stored
+                state value as the user types (similar to Project 7)
+           **/}
           <CourseForm 
             cancel={this.cancel}
             errors={this.state.errors}
@@ -87,6 +91,7 @@ export default class CreateCourse extends Component {
     });
   }
 
+  //submit method - use Data to send the request to the API to create the Course
   submit = () => {
     const { context } = this.props;
 

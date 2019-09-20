@@ -1,6 +1,6 @@
 import React from 'react';
 
-//Error component - home and gallery routes are not reached
+//Forbidden component - reached when access to a route was not permitted
 const Forbidden = () => {
     return (
       <div>

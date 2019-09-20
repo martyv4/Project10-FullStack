@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import UserForm from './UserForm';
 
+//component which renders a form to allow the user to establish a new user in the application
+
 export default class UserSignUp extends Component {
   constructor() {
     super();

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+//Courses is context-less so import the Data component directly
 import Data from '../Data';
 
+//Define component here in react and create constructor defining its default state
+//Component is the super class, and courses is the subclass (considered a type of component)
 class Courses extends Component {
   constructor () {
     //execute default constructor
@@ -20,18 +23,6 @@ class Courses extends Component {
 
     const data = new Data();
     
-    //construct uri for REST API from Project 9
-    //const uri = config.apiBaseUrl + "/courses";
-    
-    //HTTP GET the URI, 
-    //convert the response data to JSON, 
-    //assign the courses state variable and set state isLoading to false, 
-    //signifying the courses are loaded
-    
-    /*
-    fetch(uri)
-    .then(response => response.json())
-    */
     data.getCourses()
     .then(responseData => {
       this.setState({ courses: responseData, isLoading: false });
@@ -41,6 +32,7 @@ class Courses extends Component {
     });
   }
 
+  //constructs a link div for the course - passed into map method of the array
   mapJsonToCourseLink = (course, i) => {
     return <div className="grid-33" key={i}><a className="course--module course--link" href={"/courses/" + course.id }>
     <h4 className="course--label">Course</h4>
@@ -48,11 +40,17 @@ class Courses extends Component {
   </a></div>;
   }
 
+  //component is being loaded into the page (this a verb called "mounting")
+  //once component is loaded (is mounted), the method in the body of componentDidMount will be called
+  //execute fetchCourses()
   componentDidMount() {
     this.fetchCourses();
   }
 
-  render() {
+    /*once the componentDidMount is called render will be called continously (over and over again) 
+      render method is checking continously if state.isLoading is true or false
+    */
+    render() {
     let courseList = [];
  
     //if the courses array has content display them
@@ -61,7 +59,9 @@ class Courses extends Component {
       courseList = this.state.courses.map(this.mapJsonToCourseLink);
      }
      
-     //if there are no courseList in the array, and the isLoading is false, then this must be an empty search: load NotFound component
+      /* if there are no courseList in the array, 
+        and the isLoading is false, then this must be an empty search: Show message saying nothing found 
+      */
        else if (!this.state.isLoading)
        {
         courseList = <li>No results found...</li>;
@@ -72,7 +72,8 @@ class Courses extends Component {
         courseList = <li>Loading...</li>;
        }
        
-       //render the course-container with the content and courseList variables within
+     //render the course-container with the courseList variables within
+     
      return <div>
      <div className="bounds">
        {courseList}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-//Error component - home and gallery routes are not reached
+//NotFound component - route accessed does not exist (404)
 const NotFound = () => {
     return (
       <div>

@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+//withRouter gives the Header access to the 'this.props.location' attribute, allowing pathname
+//to be set to a variable and passed to the SignIn and SignUp Link clicks (UserSignIn and UserSignUp components)
 import { withRouter } from 'react-router';
 
 class Header extends React.PureComponent {
@@ -30,8 +33,6 @@ class Header extends React.PureComponent {
                   pathname: '/signin', 
                   state: { from: pathway } 
                 }} >Sign In</Link>
-                
-
               </React.Fragment>
             )}
           </nav>

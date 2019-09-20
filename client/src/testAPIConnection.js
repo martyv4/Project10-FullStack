@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 
+//ORIGINAL APP.JS WHICH WAS USED IN THE PROJECT 10 INSTRUCTIONS
+//TO TEST THE CLIENT APP'S CONNECTION WITH THE API PROJECT 9 APPLICATION
+
 class App extends Component {
   constructor () {
     //execute default constructor

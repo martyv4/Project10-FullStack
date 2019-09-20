@@ -1,5 +1,7 @@
 import React from 'react';
 
+//Component used by the CreateCourse and UpdateCourse to compose their respective HTTP FORMs
+
 export default (props) => {
   const {
     cancel,
@@ -60,6 +62,7 @@ export default (props) => {
   );
 }
 
+//if validation errors exist, they're displayed through this method
 function ErrorsDisplay({ errors }) {
   let errorsDisplay = null;
 

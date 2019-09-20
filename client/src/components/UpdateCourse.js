@@ -24,15 +24,6 @@ export default class UpdateCourse extends Component {
     
     const { context } = this.props;
 
-    //construct uri for REST API from Project 9
-    //const uri = config.apiBaseUrl  + "/courses/" + courseId;
-    
-    //HTTP GET the URI, 
-    //convert the response data to JSON, 
-    //assign the courses state variable and set state isLoading to false, 
-    //signifying the courses are loaded
-    //fetch(uri)
-    //.then(response => response.json())
     context.data.getCourseById(courseId)
     .then(responseData => {
       if (responseData.id)
@@ -56,6 +47,9 @@ export default class UpdateCourse extends Component {
   render() {
     const { context } = this.props;
     const authUser = context.authenticatedUser;
+    //if state.id was not null, and courseWasFound is false, redirect to /notfound
+    //if state.id was not null, and courseWasFound is true, and the auth user's ID
+      //is not the same as the state.courseUserId, redirect the user to /forbidden
     if (this.state.id)
     {
       if (!this.state.courseWasFound) {
@@ -69,6 +63,10 @@ export default class UpdateCourse extends Component {
       
       <div className="bounds">
           <h1>Update Course</h1>
+          {/** use CourseForm component, adding in the elements linked to the state variables
+                react to changes in the input elements calling this.change to update stored
+                state value as the user types (similar to Project 7)
+           **/}
           <CourseForm 
             cancel={this.cancel}
             errors={this.state.errors}
@@ -160,7 +158,7 @@ export default class UpdateCourse extends Component {
 
         } else {
           this.setState(() => {
-            return { errors: [courseUpdateResult] };
+            return { errors: courseUpdateResult };
           });
         }
       })
